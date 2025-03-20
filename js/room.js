@@ -39,9 +39,20 @@ const createScene = async function () {
     skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture("./textures/skybox", scene);
     skyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
     skybox.material = skyboxMaterial;
+
+
     /*GROUND*/
+    // build generic ground
+    const largeGroundMat = new BABYLON.StandardMaterial("largeGroundMat");
+    largeGroundMat.diffuseTexture = new BABYLON.Texture("https://assets.babylonjs.com/environments/valleygrass.png");
 
-
+    //ground color
+    largeGroundMat.specularColor = new BABYLON.Color3(0, 0, 0);
+    //ground surface
+    const largeGround = BABYLON.MeshBuilder.CreateGroundFromHeightMap("largeGround", "https://assets.babylonjs.com/environments/villageheightmap.png", { width: 150, height: 150, subdivisions: 20, minHeight: 0, maxHeight: 20 });
+    largeGround.material = largeGroundMat;
+    // have ground mesh allow shadows
+    largeGround.receiveShadows = true;
     /*HOUSE*/
 
     //house view//
@@ -60,7 +71,7 @@ const createScene = async function () {
     boxMat.diffuseTexture = new BABYLON.Texture("https://assets.babylonjs.com/environments/semihouse.png");
     box.material = boxMat;
 
-    //roof//
+    //Roof//
     const roof = BABYLON.MeshBuilder.CreateCylinder("roof", {
         diameter: 2.8,
         height: 3.5,
