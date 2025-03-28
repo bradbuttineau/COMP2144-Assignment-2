@@ -1,8 +1,9 @@
 const canvas = document.getElementById("renderCanvas");
 const engine = new BABYLON.Engine(canvas, true);
+const scene = new BABYLON.Scene(engine);
 
 const createScene =  async function () {
-    const scene = new BABYLON.Scene(engine);
+   
     
     const createItemCard = () => {
         const card = BABYLON.MeshBuilder.CreateBox("detail-card", { height: 3.2, width: 2, depth: 0.2 });
