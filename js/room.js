@@ -1,5 +1,4 @@
 
-import * as GUI from '@babylonjs/gui'
 
 
 
