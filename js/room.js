@@ -40,7 +40,7 @@ const createScene =  async function () {
         const description = new BABYLON.GUI.TextBlock("description");
         description.fontFamily = "Tahoma, sans-serif";
         description.text =
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore mag
+            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore mag";
         description.textWrapping = true;
         description.color = "black";
         description.fontSize = 24;
@@ -99,3 +99,12 @@ const createScene =  async function () {
 
     return scene;
 };
+// Continually render the scene in an endless loop
+createScene().then((sceneToRender) => {
+    engine.runRenderLoop(() => sceneToRender.render());
+});
+
+// Add an event listener that adapts to the user resizing the screen
+window.addEventListener("resize", function() {
+    engine.resize();
+});
