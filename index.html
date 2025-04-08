@@ -13,12 +13,18 @@
             height: 100%;
             margin: 0;
             padding: 0;
+            background-color: blue;
         }
 
         #renderCanvas {
             width: 100%;
             height: 100%;
             touch-action: none;
+
+        .card{
+            
+            
+        }
         }
     </style>
     <script src="https://cdn.babylonjs.com/babylon.js"></script>
@@ -29,15 +35,15 @@
 
 <body>
     <!-- Main card showing menu to connect to WHMIS.html-->
-    <canvas id="renderCanvas" touch-action="none">
-        <div class="card" style="width: 18rem;">
-            <img src="./textures/WHMIS.jpg" class="card-img-top" alt="...">
-            <div class="card-body">
-                <h5 class="card-title">WHIMS Safety</h5>
-                <a href="#" class="btn btn-primary">Go to module</a>
-            </div>
+    <canvas id="renderCanvas" touch-action="none"></canvas>
+    
+    <div class="card" style="width: 18rem;">
+        <img src="./textures/WHMIS.jpg" class="card-img-top" alt="whims picture">
+        <div class="card-body">
+            <h5 class="card-title">WHIMS Safety</h5>
+            <a href="./WHIMS.html" class="btn btn-primary">Go to module</a>
         </div>
-    </canvas>
+    </div>
 
 </body>
 
