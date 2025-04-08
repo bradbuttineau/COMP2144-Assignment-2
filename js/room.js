@@ -10,24 +10,24 @@ const createScene = async function () {
     const camera = new BABYLON.ArcRotateCamera("camera", -Math.PI / 2, Math.PI / 2.5, 15, new BABYLON.Vector3(0, 0, 0));
     camera.attachControl(canvas, true);
 
-//LIGHTING//
-    
+    //LIGHTING//
+
     const light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(0, 1, 0), scene);
     light.intensity = 0.7;
 
     // skybox//
-const skybox = BABYLON.MeshBuilder.CreateBox("skybox", {size: 150}, scene);
-const skyboxMaterial = new BABYLON.standardMaterail("skybox", scene);
-skyboxMaterial.backFaceCulling= false;
-skyboxMaterial.reflectionTexture= new BABYLON.CubeTexture("./textures/skybox", scene);
-skyboxMaterial.reflectionTexture.coordinatesMode= BABYLON.Texture.SKYBOX_MODE;
-skyboxMaterial.diffuseColor = new BABYLON.color3(0,0,0)
-skyboxMaterial.specularColor = new BABYLON.color3(0,0,0)
+    const skybox = BABYLON.MeshBuilder.CreateBox("skybox", { size: 150 }, scene);
+    const skyboxMaterial = new BABYLON.standardMaterail("skybox", scene);
+    skyboxMaterial.backFaceCulling = false;
+    skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture("./textures/skybox", scene);
+    skyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
+    skyboxMaterial.diffuseColor = new BABYLON.color3(0, 0, 0)
+    skyboxMaterial.specularColor = new BABYLON.color3(0, 0, 0)
 
 
 
-// GUI Menu 2D
-   
+    // GUI Menu 2D
+
     const advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
 
     //  button//
@@ -59,17 +59,17 @@ skyboxMaterial.specularColor = new BABYLON.color3(0,0,0)
     /* ENABLE AR
     ---------------------------------------------------------------------------------------------------- */
     // STEP 2a: Start a WebXR session (immersive-ar, specifically)
-    const xr = await scene.createDefaultXRExperienceAsync({
-        uiOptions: {
-            sessionMode: "immersive-ar",
-            referenceSpaceType: "unbounded-floor"
-        },
-        // STEP 2b: Enable optional features - either all of them with true (boolean), or as an array
-        optionalFeatures: true
-    });
-   
+    // const xr = await scene.createDefaultXRExperienceAsync({
+    // uiOptions: {
+    // sessionMode: "immersive-ar",
+    // referenceSpaceType: "unbounded-floor"
+    // },
+    //STEP 2b: Enable optional features - either all of them with true (boolean), or as an array
+    // optionalFeatures: true
+    // });
 
-   
+
+
 
 
     /* HIT-TEST
