@@ -35,7 +35,7 @@ const createScene = async function () {
     button.width = "100px";
     button.height = "40px";
     button.cornerRadius = 20;
-    button.color = "white";
+    button.color = "black";
     button.background = "blue";
     button.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_CENTER;
     button.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_CENTER;
@@ -43,7 +43,7 @@ const createScene = async function () {
     // button text//
     const text = new BABYLON.GUI.TextBlock();
     text.text = "Click Me";
-    text.color = "white";
+    text.color = "black";
     button.addControl(text);
 
     // Add the button to the UI
