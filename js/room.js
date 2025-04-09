@@ -97,6 +97,112 @@ const createHtmlMeshInstances = (scene) => {
     overlayMeshDiv.style.borderRadius = '20px';
     overlayMeshDiv.style.fontSize = 'xx-small';
     overlayMeshDiv.style.padding = '10px';
+    
+    const htmlMeshDiv = new ADDONS.HtmlMesh(scene, "html-mesh-div");
+    const div = document.createElement('div');
+    div.innerHTML = `
+     <div class="card" style="width: 18rem;">
+   <img src="./textures/flame.gif" class="card-img-top" alt="...">
+   <div class="card-body">
+     <h5 class="card-title">Card title</h5>
+     <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
+       content.
+     </p>
+   </div>
+ </div>
+ <div class="card" style="width: 18rem;">
+   <img src="./textures/flame_over_circle.gif" class="card-img-top" alt="...">
+   <div class="card-body">
+     <h5 class="card-title">Card title</h5>
+     <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
+       content.
+     </p>
+   </div>
+ </div>
+ <div class="card" style="width: 18rem;">
+   <img src="./textures/gas_cylinder.gif" class="card-img-top" alt="...">
+   <div class="card-body">
+     <h5 class="card-title">Card title</h5>
+     <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
+       content.
+     </p>
+   </div>
+ </div>
+ <div class="card" style="width: 18rem;">
+   <img src="./textures/corrosion.gif" class="card-img-top" alt="...">
+   <div class="card-body">
+     <h5 class="card-title">Card title</h5>
+     <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
+       content.
+     </p>
+   </div>
+ </div>
+ <div class="card" style="width: 18rem;">
+   <img src="./textures/exploding_bomb.gif" class="card-img-top" alt="...">
+   <div class="card-body">
+     <h5 class="card-title">Card title</h5>
+     <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
+       content.
+     </p>
+   </div>
+ </div>
+ <div class="card" style="width: 18rem;">
+   <img src="./textures/skull_and_crossbones.gif" class="card-img-top" alt="...">
+   <div class="card-body">
+     <h5 class="card-title">Card title</h5>
+     <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
+       content.
+     </p>
+   </div>
+ </div>
+ <div class="card" style="width: 18rem;">
+   <img src="./textures/health_hazard.gif" class="card-img-top" alt="...">
+   <div class="card-body">
+     <h5 class="card-title">Card title</h5>
+     <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
+       content.
+     </p>
+   </div>
+ </div>
+ <div class="card" style="width: 18rem;">
+   <img src="./textures/exclamation_mark.gif" class="card-img-top" alt="...">
+   <div class="card-body">
+     <h5 class="card-title">Card title</h5>
+     <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
+       content.
+     </p>
+   </div>
+ </div>
+ <div class="card" style="width: 18rem;">
+   <img src="./textures/biohazardous_infectious_materials.gif" class="card-img-top" alt="...">
+   <div class="card-body">
+     <h5 class="card-title">Card title</h5>
+     <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
+       content.
+     </p>
+   </div>
+ </div>
+ <div class="card" style="width: 18rem;">
+   <img src="..." class="card-img-top" alt="...">
+   <div class="card-body">
+     <h5 class="card-title">Card title</h5>
+     <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
+       content.
+     </p>
+   </div>
+ </div>
+ <div class="card" style="width: 18rem;">
+   <img src="..." class="card-img-top" alt="...">
+   <div class="card-body">
+     <h5 class="card-title">Card title</h5>
+     <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
+       content.
+     </p>
+     <a href="#" class="btn btn-primary">Go somewhere</a>
+   </div>
+</body>`;
+    
+    
     // Style the form
 
     overlayMesh.setContent(overlayMeshDiv, 4, 3);
