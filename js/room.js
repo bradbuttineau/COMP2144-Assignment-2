@@ -6,54 +6,46 @@ const engine = new BABYLON.Engine(canvas, true);
 const createScene = async function () {
 
     const scene = new BABYLON.Scene(engine);
+    scene.clearColor = new BABYLON.Color4(0, 0, 0, 0);
 
-    const camera = new BABYLON.ArcRotateCamera("camera", -Math.PI / 2, Math.PI / 2.5, 15, new BABYLON.Vector3(0, 0, 0));
-    camera.attachControl(canvas, true);
+    scene.createDefaultCameraOrLight(true, true, true);
+    scene.activeCamera.radius = 20;
 
-    //LIGHTING//
+    //shapes for scene//   
+    var sphere = BABYLON.MeshBuilder.CreateSphere("sphere", { diameter: 2, segments: 32 }, scene);
+    var box = BABYLON.MeshBuilder.CreateBox("box", { size: 1 }, scene);
+    var bg = BABYLON.MeshBuilder.CreatePlane("bg", { width: 1, height: 1 }, scene);
+    var disc = BABYLON.MeshBuilder.CreateDisc("disc", { radius: 0.5 })
 
-    const light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(0, 1, 0), scene);
-    light.intensity = 0.7;
+    bg.scaling.x = 12;
+    bg.scaling.y = 16
+    bg.position.z = 2
 
-    // skybox//
-    const skybox = BABYLON.MeshBuilder.CreateBox("skybox", { size: 150 }, scene);
-    const skyboxMaterial = new BABYLON.standardMaterail("skybox", scene);
-    skyboxMaterial.backFaceCulling = false;
-    skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture("./textures/skybox", scene);
-    skyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
-    skyboxMaterial.diffuseColor = new BABYLON.color3(0, 0, 0)
-    skyboxMaterial.specularColor = new BABYLON.color3(0, 0, 0)
+    sphere.position.x = 1.5;
+    sphere.position.y = -0.5;
+    sphere.position.z = 1.1;
+    box.position.x = -3;
+    box.position.y = 1;
+    box.position.z = -2;
+    disc.position.x = 1.7;
+    disc.position.y = -2.6;
+    disc.position.z = -1.1;
 
+    // Add action manager to box so it can receive pointer events
+    box.actionManager = new BABYLON.ActionManager(scene);
+    box.actionManager.registerAction(new BABYLON.ExecuteCodeAction(
+        BABYLON.ActionManager.OnPointerOverTrigger, (ev) => {
+            console.log("pointer over box");
+        }));
 
+    // Add action manager to disc so it can receive pointer events
+    disc.actionManager = new BABYLON.ActionManager(scene);
+    disc.actionManager.registerAction(new BABYLON.ExecuteCodeAction(
+        BABYLON.ActionManager.OnPointerOverTrigger, (ev) => {
+            console.log("pointer over disc");
+        }));
 
-    // GUI Menu 2D
-
-    const advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
-
-    //  button//
-    const button = new BABYLON.GUI.Button("myButton");
-    button.width = "100px";
-    button.height = "40px";
-    button.cornerRadius = 20;
-    button.color = "black";
-    button.background = "blue";
-    button.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_CENTER;
-    button.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_CENTER;
-
-    // button text//
-    const text = new BABYLON.GUI.TextBlock();
-    text.text = "Click Me";
-    text.color = "black";
-    button.addControl(text);
-
-    // Add the button to the UI
-    advancedTexture.addControl(button);
-
-    // Handle button click
-    button.onPointerClickObservable.add(() => {
-        console.log("Button clicked!");
-    });
-
+    createHtmlMeshInstances(scene);
 
 
     /* ENABLE AR
@@ -62,60 +54,54 @@ const createScene = async function () {
     // const xr = await scene.createDefaultXRExperienceAsync({
     // uiOptions: {
     // sessionMode: "immersive-ar",
-    // referenceSpaceType: "unbounded-floor"
+
     // },
     //STEP 2b: Enable optional features - either all of them with true (boolean), or as an array
     // optionalFeatures: true
     // });
 
 
-
-
-
-    /* HIT-TEST
-    ---------------------------------------------------------------------------------------------------- */
-    // STEP 5: A hit-test is a standard feature in AR that permits a ray to be cast from the device (headset or phone) into the real world, and detect where it intersects with a real-world object. This enables AR apps to place objects on surfaces or walls of the real world (https://immersive-web.github.io/hit-test/). To enable hit-testing, use the enableFeature() method of the featuresManager from the base WebXR experience helper.
-    const hitTest = xr.baseExperience.featuresManager.enableFeature(BABYLON.WebXRHitTest, "latest");
-    // STEP 6a: Create a marker to show where a hit-test has registered a surface
-    const marker = BABYLON.MeshBuilder.CreateTorus("marker", { diameter: 0.15, thickness: 0.05 }, scene);
-    marker.isVisible = false;
-    marker.rotationQuaternion = new BABYLON.Quaternion();
-    // STEP 6b: Create a variable to store the latest hit-test results
-    let latestHitTestResults = null;
-    // STEP 6c: Add an event listener for the hit-test results
-    hitTest.onHitTestResultObservable.add((results) => {
-        // STEP 6d: If there is a hit-test result, turn on the marker, and extract the position, rotation, and scaling from the hit-test result
-        if (results.length) {
-            marker.isVisible = true;
-            results[0].transformationMatrix.decompose(marker.scaling, marker.rotationQuaternion, marker.position);
-            latestHitTestResults = results;
-        } else {
-            // STEP 6e: If there is no hit-test result, turn off the marker and clear the stored results
-            marker.isVisible = false;
-            latestHitTestResults = null;
-        };
-    });
-
-    /* ANCHORS
-    ---------------------------------------------------------------------------------------------------- */
-    // STEP 7: Anchors are a feature that allow you to place objects in the real world space and have them stay there, even if the observer moves around. To enable anchors, use the enableFeature() method of the featuresManager from the base WebXR experience helper (https://immersive-web.github.io/anchors/).
-    const anchors = xr.baseExperience.featuresManager.enableFeature(BABYLON.WebXRAnchorSystem, "latest");
-    // STEP 8a: Add event listener for click (and simulate this in the Immersive Web Emulator)
-    canvas.addEventListener("click", () => {
-        if (latestHitTestResults && latestHitTestResults.length > 0) {
-            // Create an anchor
-            anchors.addAnchorPointUsingHitTestResultAsync(latestHitTestResults[0]).then((anchor) => {
-                // STEP 8b: Attach the box to the anchor
-                anchor.attachedNode = box;
-            }).catch((error) => {
-                console.log(error);
-            });
-        };
-    });
-
     // Return the scene
     return scene;
 };
+const createHtmlMeshInstances = (scene) => {
+    const div = document.createElement('div');
+    div.innerHTML = `
+     <div class="card" style="width: 18rem;">
+     <img src="./textures/WHMIS.jpg" class="card-img-top" alt="whims picture">
+     <div class="card-body">
+         <h5 class="card-title">WHIMS Safety</h5>
+         <a href="./WHIMS.html" class="btn btn-primary">Go to module</a>
+     </div>
+ </div>`;
+
+    div.style.backgroundColor = 'white';
+    div.style.width = '480px';
+    div.style.height = '360px';
+    // Style the form
+
+    htmlMeshDiv.setContent(div, 4, 3);
+    htmlMeshDiv.position.x = -3;
+    htmlMeshDiv.position.y = 2;
+
+    // Shows how to create an HTML Overlay
+    const overlayMesh = new ADDONS.HtmlMesh(scene, "html-overlay-mesh", { isCanvasOverlay: true });
+    const overlayMeshDiv = document.createElement('div');
+    overlayMeshDiv.innerHTML = `<p style="padding: 60px; font-size: 80px;">This is an overlay. It is positioned in front of the canvas. This allows it to have transparency and to be non-rectangular, but it will always show over any other content in the scene</p>`;
+    overlayMeshDiv.style.backgroundColor = 'rgba(0,255,0,0.49)';
+    overlayMeshDiv.style.width = '120px';
+    overlayMeshDiv.style.height = '90px';
+    overlayMeshDiv.style.display = 'flex';
+    overlayMeshDiv.style.alignItems = 'center';
+    overlayMeshDiv.style.justifyContent = 'center';
+    overlayMeshDiv.style.borderRadius = '20px';
+    overlayMeshDiv.style.fontSize = 'xx-small';
+    overlayMeshDiv.style.padding = '10px';
+    // Style the form
+
+    overlayMesh.setContent(overlayMeshDiv, 4, 3);
+    overlayMesh.position.z = -1.5;
+}
 
 // Continually render the scene in an endless loop
 createScene().then((sceneToRender) => {
