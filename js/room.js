@@ -35,26 +35,26 @@ const createScene = () => {
   const htmlMeshDiv = new HtmlMesh(scene, "html-mesh-div");
   const div = document.createElement("div");
   div.innerHTML = `
-       
-       
-       
-       
-       
-       
-       
-       
-       
-       
-       
-       
-       
-       
-       
-       
-       
-       
-       
-       
+        <form style="padding: 10px; transform: scale(4); transform-origin: 0 0;">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required><br><br>
+            
+            <label for="country">Country:</label>
+            <select id="country" name="country">
+                <option value="USA">USA</option>
+                <option value="Canada">Canada</option>
+                <option value="UK">UK</option>
+                <option value="Australia">Australia</option>
+            </select><br><br>
+            
+            <label for="hobbies">Hobbies:</label><br>
+            <input type="checkbox" id="hobby1" name="hobbies" value="Reading">
+            <label for="hobby1">Reading</label><br>
+            <input type="checkbox" id="hobby2" name="hobbies" value="Gaming">
+            <label for="hobby2">Gaming</label><br>
+            <input type="checkbox" id="hobby3" name="hobbies" value="Sports">
+            <label for="hobby3">Sports</label><br><br>
+        </form>
     `;
   div.style.backgroundColor = "white";
   div.style.width = "480px";
@@ -71,38 +71,39 @@ const createScene = () => {
   // There are other solutions out there such as PDF.js that may give you more
   // control, but ultimately proper display of PDFs is not within the scope of
   // this project.
-  
-  
-  
-  
-  
-  
-  
-  
-  
+  const siteUrl1 = "https://www.ccohs.ca/oshanswers/chemicals/whmis_ghs/pictograms.html";
+  const htmlMeshSite1 = new HtmlMesh(scene, "html-mesh-site");
+  const iframeSite = document.createElement("iframe");
+  iframeSite.src = siteUrl1;
+  iframePdf.src = pdfUrl;
+  iframePdf.width = "480px";
+  iframePdf.height = "360px";
+  htmlMeshSite1.setContent(iframePdf, 4, 3);
+  htmlMeshSite1.position.x = 3;
+  htmlMeshSite1.position.y = 2;
 
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
+  // Shows how this can be used to include a website in your scene
+  csiteUrl = "https://www.ccohs.ca/oshanswers/chemicals/whmis_ghs/pictograms.html";
+  htmlMeshSite = new HtmlMesh(scene, "html-mesh-site");
+  const iframeSite = document.createElement("iframe");
+  iframeSite.src = siteUrl;
+  iframeSite.width = "480px";
+  iframeSite.height = "360px";
+  htmlMeshSite.setContent(iframeSite, 4, 3);
+  htmlMeshSite.position.x = -3;
+  htmlMeshSite.position.y = -2;
 
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
+  // Shows how this can be used to include a YouTube video in your scene
+  const videoId = "zELYw2qEUjI";
+  const videoUrl = ["https://www.youtube.com/embed/", videoId, "?rel=0&enablejsapi=1&disablekb=1&controls=0&fs=0&modestbranding=1"].join("");
+  const htmlMeshVideo = new HtmlMesh(scene, "html-mesh-video");
+  const iframeVideo = document.createElement("iframe");
+  iframeVideo.src = videoUrl;
+  iframeVideo.width = "480px";
+  iframeVideo.height = "360px";
+  htmlMeshVideo.setContent(iframeVideo, 4, 3);
+  htmlMeshVideo.position.x = 3;
+  htmlMeshVideo.position.y = -2;
 
   // Shows how to create an HTML Overlay by the fit strategy: FitStrategy.NONE
   const overlayMesh = new HtmlMesh(scene, "html-overlay-mesh", { isCanvasOverlay: true });
@@ -159,8 +160,7 @@ const createScene = () => {
   // Shows how to create an HTML Overlay by the fit strategy: FitStrategy.STRETCH
   const overlayStretchMesh = new HtmlMesh(scene, "html-overlay-mesh-stretch", { isCanvasOverlay: true, fitStrategy: FitStrategy.STRETCH });
   const overlayStretchMeshDiv = document.createElement("div");
-  overlayStretchMeshDiv.innerHTML = `
-  Stretch: This is an overlay. It is positioned in front of the canvas This allows it to have transparency and to be non-rectangular, but it will always show over any other content in the scene`;
+  overlayStretchMeshDiv.innerHTML = `Stretch: This is an overlay. It is positioned in front of the canvas This allows it to have transparency and to be non-rectangular, but it will always show over any other content in the scene`;
   overlayStretchMeshDiv.style.backgroundColor = "rgba(25,0,255,0.49)";
   overlayStretchMeshDiv.style.width = "400px";
   overlayStretchMeshDiv.style.display = "flex";
