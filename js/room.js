@@ -1,220 +1,184 @@
+import { Scene } from "@babylonjs/core/scene";
+import { Engine } from "@babylonjs/core/Engines/engine";
+import { MeshBuilder } from "@babylonjs/core/Meshes/meshBuilder";
+import { ActionManager } from "@babylonjs/core/Actions/actionManager";
+import { ExecuteCodeAction } from "@babylonjs/core/Actions/directActions";
+import { Color4 } from "@babylonjs/core/Maths/math.color";
+import "@babylonjs/core/Helpers/sceneHelpers";
 
-const canvas = document.getElementById("renderCanvas");
+import { HtmlMeshRenderer, HtmlMesh } from "babylonjs-addons"
 
-const engine = new BABYLON.Engine(canvas, true);
-//createScene// 
-const createScene = async function () {
+let engine;
+let scene;
 
-    const scene = new BABYLON.Scene(engine);
-    scene.clearColor = new BABYLON.Color4(0, 0, 0, 0);
+const createScene = () => {
+  const canvas = document.querySelector("canvas");
+  engine = new Engine(canvas, true);
 
-    scene.createDefaultCameraOrLight(true, true, true);
-    scene.activeCamera.radius = 20;
+  // This creates a basic Babylon Scene object (non-mesh)
+  scene = new Scene(engine);
 
-    //shapes for scene//   
-    var sphere = BABYLON.MeshBuilder.CreateSphere("sphere", { diameter: 2, segments: 32 }, scene);
-    var box = BABYLON.MeshBuilder.CreateBox("box", { size: 1 }, scene);
-    var bg = BABYLON.MeshBuilder.CreatePlane("bg", { width: 1, height: 1 }, scene);
-    var disc = BABYLON.MeshBuilder.CreateDisc("disc", { radius: 0.5 })
+  // It is critical to have a transparent clear color for HtmlMesh to work.
+  scene.clearColor = new Color4(0, 0, 0, 0);
 
-    bg.scaling.x = 12;
-    bg.scaling.y = 16
-    bg.position.z = 2
+  scene.createDefaultCameraOrLight(true, true, true);
+  scene.activeCamera.radius = 20;
 
-    sphere.position.x = 1.5;
-    sphere.position.y = -0.5;
-    sphere.position.z = 1.1;
-    box.position.x = -3;
-    box.position.y = 1;
-    box.position.z = -2;
-    disc.position.x = 1.7;
-    disc.position.y = -2.6;
-    disc.position.z = -1.1;
+  // Create the HtmlMeshRenderer
+  const htmlMeshRenderer = new HtmlMeshRenderer(scene);
 
-    // Add action manager to box so it can receive pointer events
-    box.actionManager = new BABYLON.ActionManager(scene);
-    box.actionManager.registerAction(new BABYLON.ExecuteCodeAction(
-        BABYLON.ActionManager.OnPointerOverTrigger, (ev) => {
-            console.log("pointer over box");
-        }));
+  // Shows how this can be used to include html content, such
+  // as a form, in your scene.  This can be used to create
+  // richer UIs than can be created with the standard Babylon
+  // UI control, albeit with the restriction that such UIs would
+  // not display in native mobile apps or XR applications.
+  const htmlMeshDiv = new HtmlMesh(scene, "html-mesh-div");
+  const div = document.createElement("div");
+  div.innerHTML = `
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+    `;
+  div.style.backgroundColor = "white";
+  div.style.width = "480px";
+  div.style.height = "360px";
+  // Style the form
 
-    // Add action manager to disc so it can receive pointer events
-    disc.actionManager = new BABYLON.ActionManager(scene);
-    disc.actionManager.registerAction(new BABYLON.ExecuteCodeAction(
-        BABYLON.ActionManager.OnPointerOverTrigger, (ev) => {
-            console.log("pointer over disc");
-        }));
+  htmlMeshDiv.setContent(div, 4, 3);
+  htmlMeshDiv.position.x = -3;
+  htmlMeshDiv.position.y = 2;
 
-    createHtmlMeshInstances(scene);
+  // Shows how this can be used to include a PDF in your scene.  Note this is
+  // conceptual only.  Displaying a PDF like this works, but any links in the
+  // PDF will navigate the current tab, which is probably not what you want.
+  // There are other solutions out there such as PDF.js that may give you more
+  // control, but ultimately proper display of PDFs is not within the scope of
+  // this project.
+  
+  
+  
+  
+  
+  
+  
+  
+  
 
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
 
-    /* ENABLE AR
-    ---------------------------------------------------------------------------------------------------- */
-    // STEP 2a: Start a WebXR session (immersive-ar, specifically)
-    // const xr = await scene.createDefaultXRExperienceAsync({
-    // uiOptions: {
-    // sessionMode: "immersive-ar",
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
 
-    // },
-    //STEP 2b: Enable optional features - either all of them with true (boolean), or as an array
-    // optionalFeatures: true
-    // });
+  // Shows how to create an HTML Overlay by the fit strategy: FitStrategy.NONE
+  const overlayMesh = new HtmlMesh(scene, "html-overlay-mesh", { isCanvasOverlay: true });
+  const overlayMeshDiv = document.createElement("div");
+  overlayMeshDiv.innerHTML = `<p>This is an overlay. It is positioned in front of the canvas This allows it to have transparency and to be non-rectangular, but it will always show over any other content in the scene</p>`;
+  overlayMeshDiv.style.backgroundColor = "rgba(0,255,0,0.49)";
+  overlayMeshDiv.style.width = "120px";
+  overlayMeshDiv.style.height = "90px";
+  overlayMeshDiv.style.display = "flex";
+  overlayMeshDiv.style.alignItems = "center";
+  overlayMeshDiv.style.justifyContent = "center";
+  overlayMeshDiv.style.borderRadius = "20px";
+  overlayMeshDiv.style.fontSize = "xx-small";
+  overlayMeshDiv.style.padding = "10px";
+  // Style the form
 
+  overlayMesh.setContent(overlayMeshDiv, 4, 3);
+  overlayMesh.position.x = 0;
+  overlayMesh.position.y = 0;
 
-    // Return the scene
-    return scene;
+  // Shows how to create an HTML Overlay by the fit strategy: FitStrategy.CONTAIN
+  const overlayContainMesh = new HtmlMesh(scene, "html-overlay-mesh-contain", { isCanvasOverlay: true, fitStrategy: FitStrategy.CONTAIN });
+  const overlayContainMeshDiv = document.createElement("div");
+  overlayContainMeshDiv.innerHTML = `Contain: This is an overlay. It is positioned in front of the canvas This allows it to have transparency and to be non-rectangular, but it will always show over any other content in the scene`;
+  overlayContainMeshDiv.style.width = "200px";
+  overlayContainMeshDiv.style.display = "flex";
+  overlayContainMeshDiv.style.alignItems = "center";
+  overlayContainMeshDiv.style.justifyContent = "center";
+  overlayContainMeshDiv.style.padding = "10px";
+  overlayContainMeshDiv.style.backgroundColor = "rgba(25,0,255,0.49)";
+
+  overlayContainMesh.setContent(overlayContainMeshDiv, 4, 3);
+  overlayContainMesh.position.x = 0;
+  overlayContainMesh.position.y = 3.5;
+  overlayContainMesh.billboardMode = 7;
+
+  // Shows how to create an HTML Overlay by the fit strategy: FitStrategy.COVER
+  const overlayCoverMesh = new HtmlMesh(scene, "html-overlay-mesh-cover", { isCanvasOverlay: true, fitStrategy: FitStrategy.COVER });
+  const overlayCoverMeshDiv = document.createElement("div");
+  overlayCoverMeshDiv.innerHTML = `Cover: This is an overlay. It is positioned in front of the canvas This allows it to have transparency and to be non-rectangular, but it will always show over any other content in the scene`;
+  overlayCoverMeshDiv.style.backgroundColor = "rgba(25,0,255,0.49)";
+  overlayCoverMeshDiv.style.width = "150px";
+  overlayCoverMeshDiv.style.display = "flex";
+  overlayCoverMeshDiv.style.alignItems = "center";
+  overlayCoverMeshDiv.style.justifyContent = "center";
+  overlayCoverMeshDiv.style.padding = "10px";
+  overlayCoverMeshDiv.style.overflow = "hidden";
+
+  overlayCoverMesh.setContent(overlayCoverMeshDiv, 4, 3);
+  overlayCoverMesh.position.x = -2.5;
+  overlayCoverMesh.position.y = 7;
+  overlayCoverMesh.billboardMode = 7;
+
+  // Shows how to create an HTML Overlay by the fit strategy: FitStrategy.STRETCH
+  const overlayStretchMesh = new HtmlMesh(scene, "html-overlay-mesh-stretch", { isCanvasOverlay: true, fitStrategy: FitStrategy.STRETCH });
+  const overlayStretchMeshDiv = document.createElement("div");
+  overlayStretchMeshDiv.innerHTML = `
+  Stretch: This is an overlay. It is positioned in front of the canvas This allows it to have transparency and to be non-rectangular, but it will always show over any other content in the scene`;
+  overlayStretchMeshDiv.style.backgroundColor = "rgba(25,0,255,0.49)";
+  overlayStretchMeshDiv.style.width = "400px";
+  overlayStretchMeshDiv.style.display = "flex";
+  overlayStretchMeshDiv.style.alignItems = "center";
+  overlayStretchMeshDiv.style.justifyContent = "center";
+  overlayStretchMeshDiv.style.padding = "10px";
+
+  overlayStretchMesh.setContent(overlayStretchMeshDiv, 4, 3);
+  overlayStretchMesh.position.x = 2;
+  overlayStretchMesh.position.y = 7;
+  overlayStretchMesh.billboardMode = 7;
 };
-const createHtmlMeshInstances = (scene) => {
-    const div = document.createElement('div');
-    div.innerHTML = `
-     <div class="card" style="width: 18rem;">
-     <img src="./textures/WHMIS.jpg" class="card-img-top" alt="whims picture">
-     <div class="card-body">
-         <h5 class="card-title">WHIMS Safety</h5>
-         <a href="./WHIMS.html" class="btn btn-primary">Go to module</a>
-     </div>
- </div>`;
 
-    div.style.backgroundColor = 'white';
-    div.style.width = '480px';
-    div.style.height = '360px';
-    // Style the form
+const startRenderLoop = () => {
+  engine.runRenderLoop(() => {
+    scene.render();
+  });
+};
 
-    htmlMeshDiv.setContent(div, 4, 3);
-    htmlMeshDiv.position.x = -3;
-    htmlMeshDiv.position.y = 2;
-
-    // Shows how to create an HTML Overlay
-    const overlayMesh = new ADDONS.HtmlMesh(scene, "html-overlay-mesh", { isCanvasOverlay: true });
-    const overlayMeshDiv = document.createElement('div');
-    overlayMeshDiv.innerHTML = `<p style="padding: 60px; font-size: 80px;">This is an overlay. It is positioned in front of the canvas. This allows it to have transparency and to be non-rectangular, but it will always show over any other content in the scene</p>`;
-    overlayMeshDiv.style.backgroundColor = 'rgba(0,255,0,0.49)';
-    overlayMeshDiv.style.width = '120px';
-    overlayMeshDiv.style.height = '90px';
-    overlayMeshDiv.style.display = 'flex';
-    overlayMeshDiv.style.alignItems = 'center';
-    overlayMeshDiv.style.justifyContent = 'center';
-    overlayMeshDiv.style.borderRadius = '20px';
-    overlayMeshDiv.style.fontSize = 'xx-small';
-    overlayMeshDiv.style.padding = '10px';
-    
-    const htmlMeshDiv = new ADDONS.HtmlMesh(scene, "html-mesh-div");
-    const div = document.createElement('div');
-    div.innerHTML = `
-     <div class="card" style="width: 18rem;">
-   <img src="./textures/flame.gif" class="card-img-top" alt="...">
-   <div class="card-body">
-     <h5 class="card-title">Card title</h5>
-     <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
-       content.
-     </p>
-   </div>
- </div>
- <div class="card" style="width: 18rem;">
-   <img src="./textures/flame_over_circle.gif" class="card-img-top" alt="...">
-   <div class="card-body">
-     <h5 class="card-title">Card title</h5>
-     <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
-       content.
-     </p>
-   </div>
- </div>
- <div class="card" style="width: 18rem;">
-   <img src="./textures/gas_cylinder.gif" class="card-img-top" alt="...">
-   <div class="card-body">
-     <h5 class="card-title">Card title</h5>
-     <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
-       content.
-     </p>
-   </div>
- </div>
- <div class="card" style="width: 18rem;">
-   <img src="./textures/corrosion.gif" class="card-img-top" alt="...">
-   <div class="card-body">
-     <h5 class="card-title">Card title</h5>
-     <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
-       content.
-     </p>
-   </div>
- </div>
- <div class="card" style="width: 18rem;">
-   <img src="./textures/exploding_bomb.gif" class="card-img-top" alt="...">
-   <div class="card-body">
-     <h5 class="card-title">Card title</h5>
-     <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
-       content.
-     </p>
-   </div>
- </div>
- <div class="card" style="width: 18rem;">
-   <img src="./textures/skull_and_crossbones.gif" class="card-img-top" alt="...">
-   <div class="card-body">
-     <h5 class="card-title">Card title</h5>
-     <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
-       content.
-     </p>
-   </div>
- </div>
- <div class="card" style="width: 18rem;">
-   <img src="./textures/health_hazard.gif" class="card-img-top" alt="...">
-   <div class="card-body">
-     <h5 class="card-title">Card title</h5>
-     <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
-       content.
-     </p>
-   </div>
- </div>
- <div class="card" style="width: 18rem;">
-   <img src="./textures/exclamation_mark.gif" class="card-img-top" alt="...">
-   <div class="card-body">
-     <h5 class="card-title">Card title</h5>
-     <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
-       content.
-     </p>
-   </div>
- </div>
- <div class="card" style="width: 18rem;">
-   <img src="./textures/biohazardous_infectious_materials.gif" class="card-img-top" alt="...">
-   <div class="card-body">
-     <h5 class="card-title">Card title</h5>
-     <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
-       content.
-     </p>
-   </div>
- </div>
- <div class="card" style="width: 18rem;">
-   <img src="..." class="card-img-top" alt="...">
-   <div class="card-body">
-     <h5 class="card-title">Card title</h5>
-     <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
-       content.
-     </p>
-   </div>
- </div>
- <div class="card" style="width: 18rem;">
-   <img src="..." class="card-img-top" alt="...">
-   <div class="card-body">
-     <h5 class="card-title">Card title</h5>
-     <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
-       content.
-     </p>
-     <a href="#" class="btn btn-primary">Go somewhere</a>
-   </div>
-</body>`;
-    
-    
-    // Style the form
-
-    overlayMesh.setContent(overlayMeshDiv, 4, 3);
-    overlayMesh.position.z = -1.5;
-}
-
-// Continually render the scene in an endless loop
-createScene().then((sceneToRender) => {
-    engine.runRenderLoop(() => sceneToRender.render());
-});
-
-// Add an event listener that adapts to the user resizing the screen
-window.addEventListener("resize", function () {
-    engine.resize();
-});
+createScene();
+startRenderLoop();
