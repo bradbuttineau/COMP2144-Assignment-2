@@ -1,11 +1,7 @@
 import { Scene } from "@babylonjs/core/scene";
 import { Engine } from "@babylonjs/core/Engines/engine";
-import { MeshBuilder } from "@babylonjs/core/Meshes/meshBuilder";
-import { ActionManager } from "@babylonjs/core/Actions/actionManager";
-import { ExecuteCodeAction } from "@babylonjs/core/Actions/directActions";
 import { Color4 } from "@babylonjs/core/Maths/math.color";
 import "@babylonjs/core/Helpers/sceneHelpers";
-
 import { HtmlMeshRenderer, HtmlMesh } from "babylonjs-addons"
 
 let engine;
