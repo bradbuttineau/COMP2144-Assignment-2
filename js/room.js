@@ -73,6 +73,7 @@ const createScene = () => {
   // this project.
   const siteUrl1 = "https://www.ccohs.ca/oshanswers/chemicals/whmis_ghs/pictograms.html";
   const htmlMeshSite1 = new HtmlMesh(scene, "html-mesh-site");
+  const htmlMeshSite2 = new HtmlMesh(scene, "html-mesh-site");
   const iframeSite = document.createElement("iframe");
   iframeSite.src = siteUrl1;
   iframePdf.src = pdfUrl;
@@ -85,13 +86,13 @@ const createScene = () => {
   // Shows how this can be used to include a website in your scene
   csiteUrl = "https://www.ccohs.ca/oshanswers/chemicals/whmis_ghs/pictograms.html";
   htmlMeshSite = new HtmlMesh(scene, "html-mesh-site");
-  const iframeSite = document.createElement("iframe");
+  iframeSite = document.createElement("iframe");
   iframeSite.src = siteUrl;
   iframeSite.width = "480px";
   iframeSite.height = "360px";
-  htmlMeshSite.setContent(iframeSite, 4, 3);
-  htmlMeshSite.position.x = -3;
-  htmlMeshSite.position.y = -2;
+  htmlMeshSite2.setContent(iframeSite, 4, 3);
+  htmlMeshSite2.position.x = -3;
+  htmlMeshSite2.position.y = -2;
 
   // Shows how this can be used to include a YouTube video in your scene
   const videoId = "zELYw2qEUjI";
