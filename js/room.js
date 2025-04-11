@@ -1,181 +1,182 @@
-import { Scene } from "@babylonjs/core/scene";
-import { Engine } from "@babylonjs/core/Engines/engine";
-import { Color4 } from "@babylonjs/core/Maths/math.color";
-import "@babylonjs/core/Helpers/sceneHelpers";
-import { HtmlMeshRenderer, HtmlMesh } from "babylonjs-addons"
 
-let engine;
-let scene;
+var canvas = document.getElementById("renderCanvas");
 
-const createScene = () => {
-  const canvas = document.querySelector("canvas");
-  engine = new Engine(canvas, true);
+var startRenderLoop = function (engine, canvas) {
+    engine.runRenderLoop(function () {
+        if (sceneToRender && sceneToRender.activeCamera) {
+            sceneToRender.render();
+        }
+    });
+}
 
-  // This creates a basic Babylon Scene object (non-mesh)
-  scene = new Scene(engine);
+var engine = null;
+var scene = null;
+var sceneToRender = null;
+var createDefaultEngine = function () { return new BABYLON.Engine(canvas, true, { preserveDrawingBuffer: true, stencil: true, disableWebGL2Support: false }); };
+var createScene = async function () {
+    var scene = new BABYLON.Scene(engine);
 
-  // It is critical to have a transparent clear color for HtmlMesh to work.
-  scene.clearColor = new Color4(0, 0, 0, 0);
+    var camera = new BABYLON.ArcRotateCamera("Camera", -Math.PI / 2, Math.PI / 3, 25, BABYLON.Vector3.Zero(), scene);
+    camera.attachControl(canvas, true);
 
-  scene.createDefaultCameraOrLight(true, true, true);
-  scene.activeCamera.radius = 20;
+    var light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(0, 1, 0), scene);
+    light.intensity = 0.7;
 
-  // Create the HtmlMeshRenderer
-  const htmlMeshRenderer = new HtmlMeshRenderer(scene);
+    //Create advance texture
+    var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI", true, scene);
+    advancedTexture.idealWidth = 1600;
+    advancedTexture.renderAtIdealSize = true;
+    if (window.innerWidth < 500) {
+        await advancedTexture.parseFromSnippetAsync("E92W52");
+        return scene;
+    }
 
-  // Shows how this can be used to include html content, such
-  // as a form, in your scene.  This can be used to create
-  // richer UIs than can be created with the standard Babylon
-  // UI control, albeit with the restriction that such UIs would
-  // not display in native mobile apps or XR applications.
-  const htmlMeshDiv = new HtmlMesh(scene, "html-mesh-div");
-  const div = document.createElement("div");
-  div.innerHTML = `
-        <form style="padding: 10px; transform: scale(4); transform-origin: 0 0;">
-            <label for="name">Name:</label>
-            <input type="text" id="name" name="name" required><br><br>
-            
-            <label for="country">Country:</label>
-            <select id="country" name="country">
-                <option value="USA">USA</option>
-                <option value="Canada">Canada</option>
-                <option value="UK">UK</option>
-                <option value="Australia">Australia</option>
-            </select><br><br>
-            
-            <label for="hobbies">Hobbies:</label><br>
-            <input type="checkbox" id="hobby1" name="hobbies" value="Reading">
-            <label for="hobby1">Reading</label><br>
-            <input type="checkbox" id="hobby2" name="hobbies" value="Gaming">
-            <label for="hobby2">Gaming</label><br>
-            <input type="checkbox" id="hobby3" name="hobbies" value="Sports">
-            <label for="hobby3">Sports</label><br><br>
-        </form>
-    `;
-  div.style.backgroundColor = "white";
-  div.style.width = "480px";
-  div.style.height = "360px";
-  // Style the form
+    await advancedTexture.parseFromSnippetAsync("I59XFB#11");
 
-  htmlMeshDiv.setContent(div, 4, 3);
-  htmlMeshDiv.position.x = -3;
-  htmlMeshDiv.position.y = 2;
+    var currentIndex = 8;
+    var captions = [
+        "\"These materials or products are prone to easy ignition and can burn rapidly. They should be handled with extra care and kept away from heat and open flames at all costs.\"",
+        "\"Oxidizing materials are materials that are extremely reactive to oxygen, and generate a large amount of heat when they come into contact with the element, even under mild conditions. These materials do not burn themselves, but will improve the likelihood of combustible materials around them for caching fire such as wood, textiles or other flammable materials, with lower levels of heat needed to catch fire.\"",
+        "\"This symbol is used to identify that the gas contained in a cylinder or other similar storage device is under high pressure and will be sensitive to punctures or leaks, providing the risk of explosions or allowing the cylinder to turn into a makeshift projectile if the container is compromised. Often times the gases contained within these cylinders are hazardous themselves so other hazard labels are often accompanied by a gas cylinder label.\"",
+        "\"This signifies that the material can chemically react to materials or skin, destroying them in the process. \"",
+        "\"The symbol of an object exploding is used to clearly signify that the material is explosive and risks combusting when handled improperly. \"",
+        "\"This symbol has long been associated with death and it is used in materials labelling to warn you that the relevant product has potential to be fatal, toxic, or extremely harmful even with a limited exposure. \"",
+        "\"These materials will cause chronic health effects from disease, sickness, cancer, infertility, and more. \"",
+        "\"his symbol signifies less severe health effects from exposure including irritation, inflammation, coughing etc. Effects of exposure to these materials are generally treatable and have less of risk for long term chronic health effects compared to materials under the WHMIS 2015 health hazard label. \"",
+        "\"This iconic symbol signifies that the material contains organisms harmful to our health by causing disease or other serious illnesses.\""];
 
-  // Shows how this can be used to include a PDF in your scene.  Note this is
-  // conceptual only.  Displaying a PDF like this works, but any links in the
-  // PDF will navigate the current tab, which is probably not what you want.
-  // There are other solutions out there such as PDF.js that may give you more
-  // control, but ultimately proper display of PDFs is not within the scope of
-  // this project.
-  const siteUrl1 = "https://www.ccohs.ca/oshanswers/chemicals/whmis_ghs/pictograms.html";
-  const htmlMeshSite1 = new HtmlMesh(scene, "html-mesh-site");
-  const htmlMeshSite2 = new HtmlMesh(scene, "html-mesh-site");
-  const iframeSite = document.createElement("iframe");
-  iframeSite.src = siteUrl1;
-  iframePdf.src = pdfUrl;
-  iframePdf.width = "480px";
-  iframePdf.height = "360px";
-  htmlMeshSite1.setContent(iframePdf, 4, 3);
-  htmlMeshSite1.position.x = 3;
-  htmlMeshSite1.position.y = 2;
+    var titles = [
+        "Flame",
+        "Flame over circle",
+        "Gas cylinder",
+        "Corrosion",
+        "Exploding Bomb",
+        "Skull and crossbones",
+        "Health hazard",
+        "Exclamation mark",
+        "Biohazard infections materails"
+    ]
 
-  // Shows how this can be used to include a website in your scene
-  csiteUrl = "https://www.ccohs.ca/oshanswers/chemicals/whmis_ghs/pictograms.html";
-  htmlMeshSite = new HtmlMesh(scene, "html-mesh-site");
-  iframeSite = document.createElement("iframe");
-  iframeSite.src = siteUrl;
-  iframeSite.width = "480px";
-  iframeSite.height = "360px";
-  htmlMeshSite2.setContent(iframeSite, 4, 3);
-  htmlMeshSite2.position.x = -3;
-  htmlMeshSite2.position.y = -2;
+    //Create gradient background
+    var rect1 = new BABYLON.GUI.Rectangle();
+    var gradient = new BABYLON.GUI.LinearGradient(0, 0, 1000, 1000);
+    gradient.addColorStop(0, "white");
+    gradient.addColorStop(1, "#bbb");
+    rect1.backgroundGradient = gradient;
+    advancedTexture.addControl(rect1);
 
-  // Shows how this can be used to include a YouTube video in your scene
-  const videoId = "zELYw2qEUjI";
-  const videoUrl = ["https://www.youtube.com/embed/", videoId, "?rel=0&enablejsapi=1&disablekb=1&controls=0&fs=0&modestbranding=1"].join("");
-  const htmlMeshVideo = new HtmlMesh(scene, "html-mesh-video");
-  const iframeVideo = document.createElement("iframe");
-  iframeVideo.src = videoUrl;
-  iframeVideo.width = "480px";
-  iframeVideo.height = "360px";
-  htmlMeshVideo.setContent(iframeVideo, 4, 3);
-  htmlMeshVideo.position.x = 3;
-  htmlMeshVideo.position.y = -2;
+    let children = advancedTexture.getChildren()[0].children;
+    var title = children.filter(control => control.name === "Title")[0];
+    var caption = children.filter(control => control.name === "Caption")[0];
 
-  // Shows how to create an HTML Overlay by the fit strategy: FitStrategy.NONE
-  const overlayMesh = new HtmlMesh(scene, "html-overlay-mesh", { isCanvasOverlay: true });
-  const overlayMeshDiv = document.createElement("div");
-  overlayMeshDiv.innerHTML = `<p>This is an overlay. It is positioned in front of the canvas This allows it to have transparency and to be non-rectangular, but it will always show over any other content in the scene</p>`;
-  overlayMeshDiv.style.backgroundColor = "rgba(0,255,0,0.49)";
-  overlayMeshDiv.style.width = "120px";
-  overlayMeshDiv.style.height = "90px";
-  overlayMeshDiv.style.display = "flex";
-  overlayMeshDiv.style.alignItems = "center";
-  overlayMeshDiv.style.justifyContent = "center";
-  overlayMeshDiv.style.borderRadius = "20px";
-  overlayMeshDiv.style.fontSize = "xx-small";
-  overlayMeshDiv.style.padding = "10px";
-  // Style the form
+    var nextButton = children.filter(control => control.name === "Next")[0];
+    var backButton = children.filter(control => control.name === "Back")[0];
+    var mainPainting = children.filter(control => control.name === "MainPainting")[0];
+    var paintings = children.filter(control => control.name === "Painting");
+    var background = children.filter(control => control.name === "Background")[0];
 
-  overlayMesh.setContent(overlayMeshDiv, 4, 3);
-  overlayMesh.position.x = 0;
-  overlayMesh.position.y = 0;
+    for (let i = 0; i < paintings.length; ++i) {
+        paintings[i].onPointerClickObservable.add((evt) => {
+            addshadow(paintings[currentIndex], 0);
+            currentIndex = i;
+            caption.text = captions[currentIndex];
+            title.text = titles[currentIndex];
+            mainPainting.source = paintings[currentIndex].source;
+            addshadow(paintings[currentIndex], 5);
+            resetZoom();
+        });
 
-  // Shows how to create an HTML Overlay by the fit strategy: FitStrategy.CONTAIN
-  const overlayContainMesh = new HtmlMesh(scene, "html-overlay-mesh-contain", { isCanvasOverlay: true, fitStrategy: FitStrategy.CONTAIN });
-  const overlayContainMeshDiv = document.createElement("div");
-  overlayContainMeshDiv.innerHTML = `Contain: This is an overlay. It is positioned in front of the canvas This allows it to have transparency and to be non-rectangular, but it will always show over any other content in the scene`;
-  overlayContainMeshDiv.style.width = "200px";
-  overlayContainMeshDiv.style.display = "flex";
-  overlayContainMeshDiv.style.alignItems = "center";
-  overlayContainMeshDiv.style.justifyContent = "center";
-  overlayContainMeshDiv.style.padding = "10px";
-  overlayContainMeshDiv.style.backgroundColor = "rgba(25,0,255,0.49)";
+    }
 
-  overlayContainMesh.setContent(overlayContainMeshDiv, 4, 3);
-  overlayContainMesh.position.x = 0;
-  overlayContainMesh.position.y = 3.5;
-  overlayContainMesh.billboardMode = 7;
+    var view = children.filter(control => control.name === "View")[0];
+    caption.text = captions[currentIndex];
 
-  // Shows how to create an HTML Overlay by the fit strategy: FitStrategy.COVER
-  const overlayCoverMesh = new HtmlMesh(scene, "html-overlay-mesh-cover", { isCanvasOverlay: true, fitStrategy: FitStrategy.COVER });
-  const overlayCoverMeshDiv = document.createElement("div");
-  overlayCoverMeshDiv.innerHTML = `Cover: This is an overlay. It is positioned in front of the canvas This allows it to have transparency and to be non-rectangular, but it will always show over any other content in the scene`;
-  overlayCoverMeshDiv.style.backgroundColor = "rgba(25,0,255,0.49)";
-  overlayCoverMeshDiv.style.width = "150px";
-  overlayCoverMeshDiv.style.display = "flex";
-  overlayCoverMeshDiv.style.alignItems = "center";
-  overlayCoverMeshDiv.style.justifyContent = "center";
-  overlayCoverMeshDiv.style.padding = "10px";
-  overlayCoverMeshDiv.style.overflow = "hidden";
+    function addshadow(painting, value) {
+        painting.shadowOffsetX = value;
+        painting.shadowOffsetY = value;
+        painting.shadowBlur = value;
+    }
+    nextButton.onPointerClickObservable.add((evt) => {
+        addshadow(paintings[currentIndex], 0);
+        currentIndex++;
+        if (currentIndex >= captions.length) currentIndex = 0;
+        caption.text = captions[currentIndex];
+        title.text = titles[currentIndex];
+        mainPainting.source = paintings[currentIndex].source;
+        addshadow(paintings[currentIndex], 5);
+        resetZoom();
+    });
 
-  overlayCoverMesh.setContent(overlayCoverMeshDiv, 4, 3);
-  overlayCoverMesh.position.x = -2.5;
-  overlayCoverMesh.position.y = 7;
-  overlayCoverMesh.billboardMode = 7;
+    backButton.onPointerClickObservable.add((evt) => {
+        addshadow(paintings[currentIndex], 0);
+        currentIndex--;
+        if (currentIndex < 0) currentIndex = captions.length - 1;
+        caption.text = captions[currentIndex];
+        title.text = titles[currentIndex];
+        mainPainting.source = paintings[currentIndex].source;
+        addshadow(paintings[currentIndex], 5);
+        resetZoom();
+    });
 
-  // Shows how to create an HTML Overlay by the fit strategy: FitStrategy.STRETCH
-  const overlayStretchMesh = new HtmlMesh(scene, "html-overlay-mesh-stretch", { isCanvasOverlay: true, fitStrategy: FitStrategy.STRETCH });
-  const overlayStretchMeshDiv = document.createElement("div");
-  overlayStretchMeshDiv.innerHTML = `Stretch: This is an overlay. It is positioned in front of the canvas This allows it to have transparency and to be non-rectangular, but it will always show over any other content in the scene`;
-  overlayStretchMeshDiv.style.backgroundColor = "rgba(25,0,255,0.49)";
-  overlayStretchMeshDiv.style.width = "400px";
-  overlayStretchMeshDiv.style.display = "flex";
-  overlayStretchMeshDiv.style.alignItems = "center";
-  overlayStretchMeshDiv.style.justifyContent = "center";
-  overlayStretchMeshDiv.style.padding = "10px";
+    background.onPointerClickObservable.add((evt) => {
+        resetZoom();
+    });
 
-  overlayStretchMesh.setContent(overlayStretchMeshDiv, 4, 3);
-  overlayStretchMesh.position.x = 2;
-  overlayStretchMesh.position.y = 7;
-  overlayStretchMesh.billboardMode = 7;
+    var defaultPosX = mainPainting.leftInPixels;
+    var defaultPosY = mainPainting.topInPixels;
+    view.onPointerClickObservable.add((evt) => {
+        mainPainting.scaleX = 0.35;
+        mainPainting.scaleY = 0.35;
+        mainPainting.zIndex = 5;
+        mainPainting.leftInPixels = 0;
+        mainPainting.topInPixels = 0;
+        mainPainting.shadowBlur = 500;
+        background.background = "black";
+        background.zIndex = 3;
+        background.alpha = 0.3;
+    });
+
+    function resetZoom() {
+        mainPainting.scaleX = 0.15;
+        mainPainting.scaleY = 0.15;
+        mainPainting.leftInPixels = defaultPosX;
+        mainPainting.topInPixels = defaultPosY;
+        mainPainting.shadowBlur = 0;
+        background.alpha = 0.0;
+        background.zIndex = 0;
+    }
+    return scene;
 };
 
-const startRenderLoop = () => {
-  engine.runRenderLoop(() => {
-    scene.render();
-  });
-};
+window.initFunction = async function () {
 
-createScene();
-startRenderLoop();
+
+
+    var asyncEngineCreation = async function () {
+        try {
+            return createDefaultEngine();
+        } catch (e) {
+            console.log("the available createEngine function failed. Creating the default engine instead");
+            return createDefaultEngine();
+        }
+    }
+
+    window.engine = await asyncEngineCreation();
+
+    const engineOptions = window.engine.getCreationOptions?.();
+    if (!engineOptions || engineOptions.audioEngine !== false) {
+
+    }
+    if (!engine) throw 'engine should not be null.';
+    startRenderLoop(engine, canvas);
+    window.scene = createScene();
+};
+initFunction().then(() => {
+    scene.then(returnedScene => { sceneToRender = returnedScene; });
+
+});
+
+// Resize
+window.addEventListener("resize", function () {
+    engine.resize();
+})
