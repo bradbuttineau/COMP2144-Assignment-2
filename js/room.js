@@ -1,8 +1,8 @@
 import * as GUI from '@babylonjs/gui'
 
-
-
-const createScene = function () {
+const canvas = document.getElementById("renderCanvas");
+const engine = new BABYLON.Engine(canvas, true);
+const createScene = async function () {
 
 
     const scene = new BABYLON.Scene(engine);
@@ -48,7 +48,18 @@ const createScene = function () {
     image.stretch = BABYLON.GUI.Image.STRETCH_NINE_PATCH;
     grid.addControl(image2, 0, 1);
    
-   
+    /* ENABLE AR*/
+ 
+ // Start a WebXR session (immersive-ar, specifically)
+ const xr = await scene.createDefaultXRExperienceAsync({
+    uiOptions: {
+        sessionMode: "immersive-ar",
+        // Set the referenceSpaceType to "unbounded" - since the headset is in passthrough mode with AR, let the vistor go anywhere they like within their physical space
+        referenceSpaceType: "local" // viewer, local, local-floor, bounded-floor, or unbounded (https://developer.mozilla.org/en-US/docs/Web/API/XRReferenceSpace and https://gist.github.com/lem
+    },
+    // Enable optional features - either all of them with true (boolean), or as an array
+    optionalFeatures: true
+});
    
     return scene;
 };
