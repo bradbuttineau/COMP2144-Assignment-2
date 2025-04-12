@@ -2,6 +2,7 @@
   "dependencies": {
     "@babylonjs/addons": "^8.1.1",
     "@babylonjs/gui": "^8.2.0",
-    "babylonjs-addons": "^8.1.1"
+    "babylonjs-addons": "^8.1.1",
+    "bootstrap": "^5.3.5"
   }
 }

@@ -1,4 +1,3 @@
-import * as GUI from '@babylonjs/gui'
 
 const canvas = document.getElementById("renderCanvas");
 const engine = new BABYLON.Engine(canvas, true);
@@ -25,28 +24,28 @@ const createScene = async function () {
 
     // Built-in 'ground' shape.
     const ground = BABYLON.MeshBuilder.CreateGround("ground1", 6, 6, 2, scene);
-    //GUI
-    const advanceTexture = BABYLON.GUI.AdvanceDynamicTeaxture.CreateFullScreenUI("UI");
+    
+    
 
-    const grid = new BABYLON.GUI.Grid();
-    grid.addColumnDefinition(1 / 3);
-    grid.addColumnDefinition(1 / 3);
-    grid.addColumnDefinition(1 / 3);
-    advanceTexture.AddControl(grid)
+    
+    
+    
+    
+    
 
-    const image = new BABYLON.GUI.Image("but", "/images/WHMIS.gif");
-    image.width = "200px";
-    image.height = "300px";
-    image.populateNinePatchSliceFromImage = true;
-    image.stretch = BABYLON.GUI.Image.STRETCH_NINE_PATCH;
-    grid.addControl(image, 0, 0);
+    
+    
+    
+    
+    
+    
 
-    const image2 = new BABYLON.GUI.Image("but", "/images/Lifting Techniques");
-    image.width = "200px";
-    image.height = "300px";
-    image.populateNinePatchSliceFromImage = true;
-    image.stretch = BABYLON.GUI.Image.STRETCH_NINE_PATCH;
-    grid.addControl(image2, 0, 1);
+    
+    
+    
+    
+    
+    
    
     /* ENABLE AR*/
  
